@@ -17,7 +17,7 @@ type FormikErrorType = {
 
 export const Login = () => {
     const formik = useFormik({
-        initialValues: {
+        initialValues: {                    //итерфейс initialValues это formik.values
             email: '',
             password: '',
             rememberMe: false
@@ -41,6 +41,7 @@ export const Login = () => {
         },
         onSubmit: values => {
             alert(JSON.stringify(values));
+            formik.resetForm()  //зачишает стэйт полей formik.values и перезагружает компоненту
         },
     })
 
@@ -75,8 +76,11 @@ export const Login = () => {
                         {formik.errors.password && formik.touched.password && <div style={{color: "red"}}>{formik.errors.password}</div>}
 
                         <FormControlLabel label={'Remember me'} control={<Checkbox
-                            // name="rememberMe" checked={formik.values.rememberMe} onChange={formik.handleChange}
-                            {...formik.getFieldProps('rememberMe')}/>}/>
+                            // name="rememberMe" onChange={formik.handleChange} value={formik.values.rememberMe}  //атрибут value имеет свой стэйт ине очистит поле сабмита, формик сохраняет у себя в стейт этого поля
+                            // checked={formik.values.rememberMe}  //что бы очищало полсе сабмита;   value необязательно прописывать, не подвязана под поле лок стейта rememberMe
+                            checked={formik.values.rememberMe}  //имеет преоритет над value
+                            {...formik.getFieldProps('rememberMe')}
+                            />}/>
                         <Button type={'submit'} variant={'contained'} color={'primary'}>
                             Login
                         </Button>
