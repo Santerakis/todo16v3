@@ -44,7 +44,8 @@ export const Login = () => {
         },
     })
 
-    console.log('err: ',formik.errors)
+    // console.log('err: ', formik.errors)
+    console.log('touched: ', formik.touched)
 
     return <Grid container justifyContent={'center'}>
         <Grid item justifyContent={'center'}>
@@ -63,15 +64,16 @@ export const Login = () => {
                     <FormGroup>
                         <TextField label="Email" margin="normal"
                                    name="email" onChange={formik.handleChange} value={formik.values.email}
-                                   onBlur={() => formik.handleSubmit()}/>
-                        {formik.errors.email && <div style={{color: "red"}}>{formik.errors.email}</div>}
+                                   onBlur={formik.handleBlur}/>
+                        {formik.errors.email && formik.touched.email && <div style={{color: "red"}}>{formik.errors.email}</div>}
 
                         <TextField type="password" label="Password" margin="normal"
-                                   name="password" onChange={formik.handleChange} value={formik.values.password}/>
-                        {formik.errors.password && <div style={{color: "red"}}>{formik.errors.password}</div>}
+                                   name="password" onChange={formik.handleChange} value={formik.values.password}
+                                   onBlur={formik.handleBlur}/>
+                        {formik.errors.password && formik.touched.password && <div style={{color: "red"}}>{formik.errors.password}</div>}
 
                         <FormControlLabel label={'Remember me'} control={<Checkbox
-                                    name="rememberMe" checked={formik.values.rememberMe} onChange={formik.handleChange}/>}/>
+                            name="rememberMe" checked={formik.values.rememberMe} onChange={formik.handleChange}/>}/>
                         <Button type={'submit'} variant={'contained'} color={'primary'}>
                             Login
                         </Button>
@@ -81,3 +83,7 @@ export const Login = () => {
         </Grid>
     </Grid>
 }
+
+// <TextField label="Email" margin="normal"
+//            name="email" onChange={formik.handleChange} value={formik.values.email}
+//            onBlur={() => formik.handleSubmit()}/>
