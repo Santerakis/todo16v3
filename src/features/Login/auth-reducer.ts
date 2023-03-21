@@ -29,7 +29,9 @@ export const loginTC = (data: FormDataType) => async (dispatch: Dispatch<Actions
         const res = await authAPI.login(data)
         if (res.resultCode === Result_Code.Ok) {
             dispatch(setIsLoggedInAC(true))
+            dispatch(setAppStatusAC('succeeded'))
         } else {
+            console.log('else res: ', res)
             handleServerAppError(res, dispatch)
         }
     } catch (e: any) {               // try не знает что был асинх запрос и сюда свалится ошибка аксиусаю Нужно делать типизацию
