@@ -18,6 +18,11 @@ export const authAPI = {
                 return res.data
             });
 
+    },
+    me() {
+        return instance.get<ResponseType<{ userId: number }>>('auth/me')
+            .then(res => res.data);
+
     }
 }
 
