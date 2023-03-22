@@ -56,7 +56,23 @@ export const meTC = () => async (dispatch: Dispatch<ActionsType>) => {
             dispatch(setIsInitializedAC(true))
             handleServerAppError(res, dispatch)
         }
-    } catch (e: any) {               // try не знает что был асинх запрос и сюда свалится ошибка аксиусаю Нужно делать типизацию
+    } catch (e: any) {
+        handleServerNetworkError(e, dispatch)
+    }
+}
+
+export const logOutTC = () => async (dispatch: Dispatch<ActionsType>) => {
+    dispatch(setAppStatusAC('loading'))
+    try {
+        const res = await authAPI.logOut()
+        if (res.resultCode === Result_Code.Ok) {
+            dispatch(setIsLoggedInAC(false))
+            dispatch(setAppStatusAC('succeeded'))
+        } else {
+            // console.log('else res: ', res)
+            handleServerAppError(res, dispatch)
+        }
+    } catch (e: any) {
         handleServerNetworkError(e, dispatch)
     }
 }

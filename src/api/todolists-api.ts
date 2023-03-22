@@ -23,8 +23,14 @@ export const authAPI = {
         return instance.get<ResponseType<{ userId: number }>>('auth/me')
             .then(res => res.data);
 
+    },
+    logOut() {
+        return instance.delete<ResponseType>('auth/login')
+            .then(res => res.data);
+
     }
 }
+
 
 // api
 export const todolistsAPI = {
