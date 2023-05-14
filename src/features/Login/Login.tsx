@@ -8,6 +8,10 @@ import FormLabel from '@mui/material/FormLabel';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import {useFormik} from "formik";
+import {loginTC} from "./auth-reducer";
+import {useAppDispatch, useAppSelector} from "../../app/store";
+import {useSelector} from "react-redux";
+import {Navigate} from "react-router-dom";
 
 type FormikErrorType = {
     email?: string
@@ -15,9 +19,17 @@ type FormikErrorType = {
     rememberMe?: boolean
 }
 
+export type FormDataType = {
+    email: string
+    password: string
+    rememberMe: boolean
+}
+
 export const Login = () => {
+    const isLoginIn = useAppSelector(store => store.auth.isLoggedIn)
+    const dispatch = useAppDispatch()
     const formik = useFormik({
-        initialValues: {
+        initialValues: {                    //итерфейс initialValues это formik.values
             email: '',
             password: '',
             rememberMe: false
@@ -40,12 +52,22 @@ export const Login = () => {
             return errors
         },
         onSubmit: values => {
-            alert(JSON.stringify(values));
+            dispatch(loginTC(values))   // из за конструкции async await, что внутри будет промис. Среда разраб заточина на promisы
+            // alert(JSON.stringify(values));
+            formik.resetForm()  //зачишает стэйт полей formik.values и перезагружает компоненту
         },
     })
 
     console.log('err: ',formik.errors)
     console.log(formik.values)
+
+    // console.log('err: ', formik.errors)
+    // console.log('touched: ', formik.touched)
+
+    if (isLoginIn) {
+        return <Navigate to={'/'}/>
+    }
+
 
     return <Grid container justifyContent={'center'}>
         <Grid item justifyContent={'center'}>
@@ -63,16 +85,23 @@ export const Login = () => {
                 <form onSubmit={formik.handleSubmit}>
                     <FormGroup>
                         <TextField label="Email" margin="normal"
-                                   name="email" onChange={formik.handleChange} value={formik.values.email}
-                                   onBlur={() => formik.handleSubmit()}/>
-                        {formik.errors.email && <div style={{color: "red"}}>{formik.errors.email}</div>}
+                                   // name="email" onChange={formik.handleChange} value={formik.values.email}
+                                   // onBlur={formik.handleBlur}
+                                   {...formik.getFieldProps('email')}/>
+                        {formik.errors.email && formik.touched.email && <div style={{color: "red"}}>{formik.errors.email}</div>}
 
                         <TextField type="password" label="Password" margin="normal"
-                                   name="password" onChange={formik.handleChange} value={formik.values.password}/>
-                        {formik.errors.password && <div style={{color: "red"}}>{formik.errors.password}</div>}
+                                   // name="password" onChange={formik.handleChange} value={formik.values.password}
+                                   // onBlur={formik.handleBlur}
+                                   {...formik.getFieldProps('password')}/>
+                        {formik.errors.password && formik.touched.password && <div style={{color: "red"}}>{formik.errors.password}</div>}
 
                         <FormControlLabel label={'Remember me'} control={<Checkbox
-                                    name="rememberMe" checked={formik.values.rememberMe} onChange={formik.handleChange}/>}/>
+                            // name="rememberMe" onChange={formik.handleChange} value={formik.values.rememberMe}  //атрибут value имеет свой стэйт ине очистит поле сабмита, формик сохраняет у себя в стейт этого поля
+                            // checked={formik.values.rememberMe}  //что бы очищало полсе сабмита;   value необязательно прописывать, не подвязана под поле лок стейта rememberMe
+                            checked={formik.values.rememberMe}  //имеет преоритет над value
+                            {...formik.getFieldProps('rememberMe')}
+                            />}/>
                         <Button type={'submit'} variant={'contained'} color={'primary'}>
                             Login
                         </Button>
@@ -82,3 +111,7 @@ export const Login = () => {
         </Grid>
     </Grid>
 }
+
+// <TextField label="Email" margin="normal"
+//            name="email" onChange={formik.handleChange} value={formik.values.email}
+//            onBlur={() => formik.handleSubmit()}/>
