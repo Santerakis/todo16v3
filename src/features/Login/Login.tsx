@@ -45,6 +45,7 @@ export const Login = () => {
     })
 
     console.log('err: ',formik.errors)
+    console.log(formik.values)
 
     return <Grid container justifyContent={'center'}>
         <Grid item justifyContent={'center'}>
