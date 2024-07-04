@@ -10,8 +10,7 @@ import Button from '@mui/material/Button';
 import {useFormik} from "formik";
 import {loginTC} from "./auth-reducer";
 import {useAppDispatch, useAppSelector} from "../../app/store";
-import {useSelector} from "react-redux";
-import {Navigate} from "react-router-dom";
+ import {Navigate} from "react-router-dom";
 
 type FormikErrorType = {
     email?: string
@@ -28,12 +27,14 @@ export type FormDataType = {
 export const Login = () => {
     const isLoginIn = useAppSelector(store => store.auth.isLoggedIn)
     const dispatch = useAppDispatch()
+
     const formik = useFormik({
         initialValues: {                    //итерфейс initialValues это formik.values
             email: '',
             password: '',
-            rememberMe: false
+            rememberMe: false,
         },
+
         validate: (values) => {
             // console.log("err: ", values)
             // const regexpResult = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email) //true если совпадает; reg=newRegExp('ac+c')  /ab+c/
@@ -58,7 +59,7 @@ export const Login = () => {
         },
     })
 
-    console.log('err: ',formik.errors)
+    console.log('err: ', formik.errors)
     console.log(formik.values)
 
     // console.log('err: ', formik.errors)
@@ -85,23 +86,25 @@ export const Login = () => {
                 <form onSubmit={formik.handleSubmit}>
                     <FormGroup>
                         <TextField label="Email" margin="normal"
-                                   // name="email" onChange={formik.handleChange} value={formik.values.email}
-                                   // onBlur={formik.handleBlur}
+                            // name="email" onChange={formik.handleChange} value={formik.values.email}
+                            // onBlur={formik.handleBlur}
                                    {...formik.getFieldProps('email')}/>
-                        {formik.errors.email && formik.touched.email && <div style={{color: "red"}}>{formik.errors.email}</div>}
+                        {formik.errors.email && formik.touched.email &&
+                            <div style={{color: "red"}}>{formik.errors.email}</div>}
 
                         <TextField type="password" label="Password" margin="normal"
-                                   // name="password" onChange={formik.handleChange} value={formik.values.password}
-                                   // onBlur={formik.handleBlur}
+                            // name="password" onChange={formik.handleChange} value={formik.values.password}
+                            // onBlur={formik.handleBlur}
                                    {...formik.getFieldProps('password')}/>
-                        {formik.errors.password && formik.touched.password && <div style={{color: "red"}}>{formik.errors.password}</div>}
+                        {formik.errors.password && formik.touched.password &&
+                            <div style={{color: "red"}}>{formik.errors.password}</div>}
 
                         <FormControlLabel label={'Remember me'} control={<Checkbox
                             // name="rememberMe" onChange={formik.handleChange} value={formik.values.rememberMe}  //атрибут value имеет свой стэйт ине очистит поле сабмита, формик сохраняет у себя в стейт этого поля
                             // checked={formik.values.rememberMe}  //что бы очищало полсе сабмита;   value необязательно прописывать, не подвязана под поле лок стейта rememberMe
                             checked={formik.values.rememberMe}  //имеет преоритет над value
                             {...formik.getFieldProps('rememberMe')}
-                            />}/>
+                        />}/>
                         <Button type={'submit'} variant={'contained'} color={'primary'}>
                             Login
                         </Button>
